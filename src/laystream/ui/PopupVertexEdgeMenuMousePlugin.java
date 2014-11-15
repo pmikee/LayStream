@@ -1,8 +1,5 @@
 package laystream.ui;
 
-import laystream.interfaces.VertexMenuListener;
-import laystream.interfaces.MenuPointListener;
-import laystream.interfaces.EdgeMenuListener;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -10,6 +7,9 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
+import laystream.interfaces.EdgeMenuListener;
+import laystream.interfaces.MenuPointListener;
+import laystream.interfaces.NodeMenuListener;
 
 public class PopupVertexEdgeMenuMousePlugin<V, E> extends AbstractPopupGraphMousePlugin {
 
@@ -69,8 +69,8 @@ public class PopupVertexEdgeMenuMousePlugin<V, E> extends AbstractPopupGraphMous
         }
         Component[] menuComps = vertexPopup.getComponents();
         for (Component comp : menuComps) {
-            if (comp instanceof VertexMenuListener) {
-                ((VertexMenuListener) comp).setVertexAndView(v, vv);
+            if (comp instanceof NodeMenuListener) {
+                ((NodeMenuListener) comp).setNodeAndView(v, vv);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener) comp).setPoint(point);

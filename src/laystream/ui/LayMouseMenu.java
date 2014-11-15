@@ -16,6 +16,7 @@ import laystream.LayEdge;
 import laystream.LayNode;
 import laystream.interfaces.EdgeMenuListener;
 import laystream.interfaces.MenuPointListener;
+import laystream.interfaces.NodeMenuListener;
 
 /**
  * A collection of classes used to assemble popup mouse menus for the custom
@@ -70,6 +71,7 @@ public class LayMouseMenu {
 
     public static class WeightDisplay extends JMenuItem implements EdgeMenuListener<LayEdge> {
 
+        @Override
         public void setEdgeAndView(LayEdge e, VisualizationViewer visComp) {
             this.setText("Weight " + e + " = " + e.getWeight());
         }
@@ -79,8 +81,28 @@ public class LayMouseMenu {
 
         public VertexMenu() {
             super("Vertex Menu");
-            this.add(new DeleteVertexMenuItem<LayNode>());
+            this.add(new DeleteVertexMenuItem());
+            this.add(new NodeView());
+            this.add(new PSSView());
         }
+    }
+
+    public static class NodeView extends JMenuItem implements NodeMenuListener<LayNode> {
+
+        @Override
+        public void setNodeAndView(LayNode n, VisualizationViewer visComp) {
+            this.setText("Position: " + n + " = " + n.getLocation().toString());
+        }
+
+    }
+
+    public static class PSSView extends JMenuItem implements NodeMenuListener<LayNode> {
+
+        @Override
+        public void setNodeAndView(LayNode n, VisualizationViewer visComp) {
+            this.setText("PSS: " + n + " = " + n.getPss().toString());
+        }
+
     }
 
 }

@@ -9,9 +9,9 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
-import laystream.interfaces.VertexMenuListener;
+import laystream.interfaces.NodeMenuListener;
 
-public class DeleteVertexMenuItem<V> extends JMenuItem implements VertexMenuListener<V> {
+public class DeleteVertexMenuItem<V> extends JMenuItem implements NodeMenuListener<V> {
 
     private V vertex;
     private VisualizationViewer visComp;
@@ -33,7 +33,7 @@ public class DeleteVertexMenuItem<V> extends JMenuItem implements VertexMenuList
      * @param v
      * @param visComp
      */
-    public void setVertexAndView(V v, VisualizationViewer visComp) {
+    public void setNodeAndView(V v, VisualizationViewer visComp) {
         this.vertex = v;
         this.visComp = visComp;
         this.setText("Delete Vertex " + v.toString());

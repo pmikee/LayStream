@@ -18,10 +18,10 @@ public class LayNode {
 
     private String id;
     private Point location;
-    private ArrayList<String> pss;
-    private ArrayList<String> tc;
-    private ArrayList<String> sentPackets;
-    private ArrayList<String> receivedPackets;
+    private ArrayList<String> pss = new ArrayList<>();
+    private ArrayList<String> tc = new ArrayList<>();
+    private ArrayList<String> sentPackets = new ArrayList<>();
+    private ArrayList<String> receivedPackets = new ArrayList<>();
 
     public LayNode(String id, Point location) {
         this.id = id;
@@ -38,6 +38,10 @@ public class LayNode {
 
     public Point getLocation() {
         return location;
+    }
+
+    public String getLocationAsString() {
+        return location.x + ", " + location.y;
     }
 
     public void setLocation(Point location) {
@@ -78,6 +82,10 @@ public class LayNode {
 
     public void setReceivedPackets(ArrayList<String> receivedPackets) {
         this.receivedPackets = receivedPackets;
+    }
+
+    public String getPSSasString() {
+        return this.pss.toString();
     }
 
     public static class LayNodeFactory implements Factory<LayNode> {
