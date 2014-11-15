@@ -35,4 +35,9 @@ public class LayEdge {
         this.weiht = weiht;
     }
 
+    @Override
+    public String toString() {
+        return id;
+    }
+
 }
