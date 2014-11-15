@@ -9,9 +9,17 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.util.Random;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import org.apache.commons.collections15.Factory;
 
 /**
  *
@@ -19,35 +27,60 @@ import javax.swing.JFrame;
  */
 public class SimpleGraphView {
 
-    Graph<Integer, String> g;
+    Graph<LayNode, String> g;
+    Factory<LayNode> vertexFactory;
+    Factory<LayEdge> edgeFactory;
+    Random rnd = new Random();
 
     /**
      * Creates a new instance of SimpleGraphView
      */
     public SimpleGraphView() {
-        // Graph<V, E> where V is the type of the vertices and E is the type of the edges
-        g = new SparseMultigraph<Integer, String>();
-        // Add some vertices. From above we defined these to be type Integer.
-        g.addVertex((Integer) 1);
-        g.addVertex((Integer) 2);
-        g.addVertex((Integer) 3);
-        // Note that the default is for undirected edges, our Edges are Strings.
-        g.addEdge("Edge-A", 1, 2); // Note that Java 1.5 auto-boxes primitives
-        g.addEdge("Edge-B", 2, 3);
+        g = new SparseMultigraph<>();
+        vertexFactory = new Factory<LayNode>() {
+
+            @Override
+            public LayNode create() {
+                return new LayNode("asd", new Point(rnd.nextInt(90), rnd.nextInt(90)));
+            }
+        };
+        edgeFactory = new Factory<LayEdge>() {
+            @Override
+            public LayEdge create() {
+                return new LayEdge("asd", 10);
+            }
+        };
+        for (int i = 0; i < Util.NUMBE_OF_NODES; i++) {
+            g.addVertex(new LayNode("" + i, new Point(rnd.nextInt(90), rnd.nextInt(90))));
+        }
     }
 
     public static void main(String[] args) {
-        SimpleGraphView sgv = new SimpleGraphView(); //We create our graph in here
-        // The Layout<V, E> is parameterized by the vertex and edge types
-        Layout<Integer, String> layout = new CircleLayout(sgv.g);
-        layout.setSize(new Dimension(300, 300)); // sets the initial size of the layout space
-        // The BasicVisualizationServer<V,E> is parameterized by the vertex and edge types
-        BasicVisualizationServer<Integer, String> vv = new BasicVisualizationServer<Integer, String>(layout);
-        vv.setPreferredSize(new Dimension(350, 350)); //Sets the viewing area size
+        SimpleGraphView sgv = new SimpleGraphView();
+        Layout<LayNode, String> layout = new CircleLayout(sgv.g);
+        layout.setSize(new Dimension(800, 600));
 
-        JFrame frame = new JFrame("Simple Graph View");
+        VisualizationViewer<LayNode, String> vv
+                = new VisualizationViewer<>(layout);
+        vv.setPreferredSize(new Dimension(350, 350));
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+        vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+
+        EditingModalGraphMouse gm
+                = new EditingModalGraphMouse(vv.getRenderContext(),
+                        sgv.vertexFactory, sgv.edgeFactory);
+        vv.setGraphMouse(gm);
+
+        JFrame frame = new JFrame("layStream");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(vv);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu modeMenu = gm.getModeMenu(); // Obtain mode menu from the mouse
+        modeMenu.setText("Mouse Mode");
+        modeMenu.setPreferredSize(new Dimension(80, 20)); // Change the size  menuBar.add(modeMenu);
+        frame.setJMenuBar(menuBar);
+        gm.setMode(ModalGraphMouse.Mode.EDITING); // Start off in editing mode
         frame.pack();
         frame.setVisible(true);
     }

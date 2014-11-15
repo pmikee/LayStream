@@ -78,12 +78,7 @@ public class LayNode {
         this.receivedPackets = receivedPackets;
     }
 
-    private double getDistanceFromOther(LayNode node) {
-        double xDistance = Math.abs(this.getLocation().x - node.getLocation().x);
-        double yDistance = Math.abs(this.getLocation().y - node.getLocation().y);
-        double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
-
-        return distance;
+    public void create() {
 
     }
 
