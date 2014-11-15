@@ -7,6 +7,7 @@ package laystream;
 
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Pair;
 import java.awt.Point;
 import java.util.Collection;
 import java.util.Random;
@@ -61,4 +62,19 @@ public class SimpleGraphView {
     public int getEdgeCount() {
         return g.getEdgeCount();
     }
+
+    /**
+     * él hozzáadása a gráfhoz
+     *
+     * @param e él
+     * @param nodes Pair<LayNode>, forrás: első tag, cél: 2. tag
+     */
+    public void addEdge(LayEdge e, Pair<LayNode> nodes) {
+        g.addEdge(e, nodes.getFirst(), nodes.getSecond());
+    }
+
+    public void removeEdge(LayEdge e) {
+        g.removeEdge(e);
+    }
+
 }

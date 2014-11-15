@@ -5,6 +5,8 @@
  */
 package laystream;
 
+import org.apache.commons.collections15.Factory;
+
 /**
  *
  * @author Miklós
@@ -12,11 +14,11 @@ package laystream;
 public class LayEdge {
 
     private String id;
-    private double weiht;
+    private double weight;
 
     public LayEdge(String id, double weiht) {
         this.id = id;
-        this.weiht = weiht;
+        this.weight = weiht;
     }
 
     public String getId() {
@@ -27,17 +29,58 @@ public class LayEdge {
         this.id = id;
     }
 
-    public double getWeiht() {
-        return weiht;
+    public double getWeight() {
+        return weight;
     }
 
-    public void setWeiht(double weiht) {
-        this.weiht = weiht;
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     @Override
     public String toString() {
         return id;
+    }
+
+    public static class LayEdgeFactory implements Factory<LayEdge> {
+
+        private static int linkCount = 0;
+        private static double defaultWeight = 0;
+        private static double defaultCapacity;
+
+        private static LayEdgeFactory instance = new LayEdgeFactory();
+
+        private LayEdgeFactory() {
+        }
+
+        public static LayEdgeFactory getInstance() {
+            return instance;
+        }
+
+        public LayEdge create() {
+            String id = "Link" + linkCount++;
+            double weight = 0.0;
+            LayEdge edge = new LayEdge(id, weight);
+            edge.setWeight(defaultWeight);
+            return edge;
+        }
+
+        public static double getDefaultWeight() {
+            return defaultWeight;
+        }
+
+        public static void setDefaultWeight(double aDefaultWeight) {
+            defaultWeight = aDefaultWeight;
+        }
+
+        public static double getDefaultCapacity() {
+            return defaultCapacity;
+        }
+
+        public static void setDefaultCapacity(double aDefaultCapacity) {
+            defaultCapacity = aDefaultCapacity;
+        }
+
     }
 
 }

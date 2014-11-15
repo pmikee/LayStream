@@ -7,6 +7,8 @@ package laystream;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
+import org.apache.commons.collections15.Factory;
 
 /**
  *
@@ -78,8 +80,25 @@ public class LayNode {
         this.receivedPackets = receivedPackets;
     }
 
-    public void create() {
+    public static class LayNodeFactory implements Factory<LayNode> {
+
+        private static int nodeCount = 0;
+        private static LayNodeFactory instance = new LayNodeFactory();
+        private static Random rnd = new Random();
+
+        private LayNodeFactory() {
+        }
+
+        public static LayNodeFactory getInstance() {
+            return instance;
+        }
+
+        public LayNode create() {
+            String id = "Node" + nodeCount++;
+            Point position = new Point(rnd.nextInt(90), rnd.nextInt(90));
+            LayNode v = new LayNode(id, position);
+            return v;
+        }
 
     }
-
 }
