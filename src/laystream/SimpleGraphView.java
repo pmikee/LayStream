@@ -17,6 +17,7 @@ import org.apache.commons.collections15.Factory;
  *
  * @author Dr. Greg M. Bernstein
  */
+@Deprecated
 public class SimpleGraphView {
 
     Graph<LayNode, LayEdge> g;
