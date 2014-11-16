@@ -5,6 +5,7 @@
  */
 package laystream;
 
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.SparseMultigraph;
@@ -12,10 +13,18 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import laystream.ui.LayMouseMenu;
 import laystream.ui.PopupVertexEdgeMenuMousePlugin;
@@ -28,16 +37,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("Editing and Mouse Menu Demo");
+        JFrame frame = new JFrame("LayStream");
+        frame.setLayout(new BorderLayout());
         SparseMultigraph<LayNode, LayEdge> g
                 = new SparseMultigraph<>();
         // Layout<V, E>, VisualizationViewer<V,E>
 //        Map<LayNode,Point2D> vertexLocations = new HashMap<LayNode, Point2D>();
         Layout<LayNode, LayEdge> layout = new StaticLayout(g);
-        layout.setSize(new Dimension(300, 300));
         VisualizationViewer<LayNode, LayEdge> vv
-                = new VisualizationViewer<LayNode, LayEdge>(layout);
-        vv.setPreferredSize(new Dimension(350, 350));
+                = new VisualizationViewer<>(layout);
         // Show vertex and edge labels
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
@@ -58,11 +66,10 @@ public class Main {
         gm.add(myPlugin);   // Add our new plugin to the mouse
 
         vv.setGraphMouse(gm);
-
         //JFrame frame = new JFrame("Editing and Mouse Menu Demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(vv);
-
+        frame.add(vv, BorderLayout.WEST);
+        JPanel buttonPanel = new JPanel(new GridLayout(10, 1));
         // Let's add a menu for changing mouse modes
         JMenuBar menuBar = new JMenuBar();
         JMenu modeMenu = gm.getModeMenu();
@@ -72,6 +79,9 @@ public class Main {
 
         menuBar.add(modeMenu);
         frame.setJMenuBar(menuBar);
+        buttonPanel.add(getButtons(g, vv));
+        frame.add(buttonPanel, BorderLayout.EAST);
+
         gm.setMode(ModalGraphMouse.Mode.EDITING); // Start off in editing mode
         frame.pack();
         frame.setVisible(true);
@@ -105,5 +115,24 @@ public class Main {
 //        frame.pack();
 //        frame.setVisible(true);
 //    }
+
+    private static JButton getButtons(final SparseMultigraph g, final VisualizationViewer vv) {
+        JButton button = new JButton("Random gráf");
+        //Add action listener to button
+        button.addActionListener(new ActionListener() {
+            Random rnd = new Random();
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < 10; i++) {
+                    g.addVertex(new LayNode("" + i, new Point(rnd.nextInt(90), rnd.nextInt(90))));
+
+                }
+                vv.setGraphLayout(new KKLayout(g));
+                vv.repaint();
+            }
+        });
+        return button;
+    }
 
 }
